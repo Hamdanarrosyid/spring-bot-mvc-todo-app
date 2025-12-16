@@ -31,8 +31,9 @@ public class LoginController {
     }
 
     @PostMapping(value = "/auth/login", consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE)
-    public String post(@Valid @ModelAttribute("login")LoginRequestDto loginRequest, BindingResult bindingResult, Model model, HttpSession session) {
+    public String post(@Valid @ModelAttribute("loginForm") LoginRequestDto loginRequest, BindingResult bindingResult, Model model, HttpSession session) {
         if (bindingResult.hasErrors()) {
+            model.addAttribute("loginForm", loginRequest);
             return "auth/login";
         }
         try {
