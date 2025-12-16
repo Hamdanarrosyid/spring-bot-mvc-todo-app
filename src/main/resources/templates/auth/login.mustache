@@ -30,13 +30,16 @@
                     <label for="email" class="form-label">Email address</label>
                     <input
                             type="email"
-                            class="form-control"
+                            class="form-control {{#BindingResult.loginForm.fieldErrors.email}}is-invalid{{/BindingResult.loginForm.fieldErrors.email}}"
                             id="email"
                             name="email"
                             placeholder="you@example.com"
                             required
-                            value="{{#loginForm}}{{email}}{{/loginForm}}"
+                            value="{{loginForm.email}}"
                     >
+                    {{#BindingResult.loginForm.fieldErrors.email}}
+                        <div class="invalid-feedback d-block">{{defaultMessage}}</div>
+                    {{/BindingResult.loginForm.fieldErrors.email}}
                 </div>
 
                 <!-- Password -->
@@ -44,12 +47,15 @@
                     <label for="password" class="form-label">Password</label>
                     <input
                             type="password"
-                            class="form-control"
+                            class="form-control {{#BindingResult.loginForm.fieldErrors.password}}is-invalid{{/BindingResult.loginForm.fieldErrors.password}}"
                             id="password"
                             name="password"
                             placeholder="••••••••"
                             required
                     >
+                    {{#BindingResult.loginForm.fieldErrors.password}}
+                        <div class="invalid-feedback d-block">{{defaultMessage}}</div>
+                    {{/BindingResult.loginForm.fieldErrors.password}}
                 </div>
 
                 <!-- Remember me + forgot -->
