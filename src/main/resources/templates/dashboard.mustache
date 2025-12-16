@@ -1,0 +1,193 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+    <title>Dashboard - Todos</title>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
+</head>
+<body class="bg-light">
+
+<!-- Navbar -->
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+    <div class="container-fluid">
+        <a class="navbar-brand fw-bold" href="#">Belajar Spring MVC</a>
+        <div class="d-flex">
+            <span class="navbar-text me-3">
+                {{#user}}
+                    Hi, {{email}}
+                {{/user}}
+            </span>
+            <form action="/auth/logout" method="post">
+                <button type="submit" class="btn btn-outline-light btn-sm">
+                    Logout
+                </button>
+            </form>
+        </div>
+    </div>
+</nav>
+
+<div class="container py-4">
+
+    <!-- Title + Flash Message -->
+    <div class="row mb-3">
+        <div class="col">
+            <h1 class="h3 fw-bold mb-1">Todo Dashboard</h1>
+            <p class="text-muted mb-0">Kelola daftar tugasmu ✏️</p>
+        </div>
+    </div>
+
+    {{#success}}
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+            {{success}}
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    {{/success}}
+
+    {{#error}}
+        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+            {{error}}
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    {{/error}}
+
+    <div class="row">
+        <!-- Form Tambah Todo -->
+        <div class="col-lg-4 mb-4">
+            <div class="card shadow-sm border-0">
+                <div class="card-body">
+                    <h2 class="h5 fw-bold mb-3">Tambah Todo</h2>
+
+                    <form action="/todos" method="post">
+                        <div class="mb-3">
+                            <label for="title" class="form-label">Judul</label>
+                            <input type="text"
+                                   class="form-control"
+                                   id="title"
+                                   name="title"
+                                   placeholder="Belajar Spring MVC"
+                                   required>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="description" class="form-label">Deskripsi</label>
+                            <textarea class="form-control"
+                                      id="description"
+                                      name="description"
+                                      rows="3"
+                                      placeholder="Tambahkan catatan jika perlu"></textarea>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="dueDate" class="form-label">Jatuh Tempo</label>
+                            <input type="date"
+                                   class="form-control"
+                                   id="dueDate"
+                                   name="dueDate">
+                        </div>
+
+                        <div class="form-check mb-3">
+                            <input class="form-check-input"
+                                   type="checkbox"
+                                   value="true"
+                                   id="completed"
+                                   name="completed">
+                            <label class="form-check-label" for="completed">
+                                Sudah selesai?
+                            </label>
+                        </div>
+
+                        <div class="d-grid">
+                            <button type="submit" class="btn btn-primary">
+                                Simpan Todo
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <!-- List Todo -->
+        <div class="col-lg-8">
+            <div class="card shadow-sm border-0">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+                        <h2 class="h5 fw-bold mb-0">Daftar Todos</h2>
+<!--                        <span class="badge bg-secondary">-->
+<!--                            {{#todos}}{{.}}{{/todos}}-->
+<!--                        </span>-->
+                    </div>
+
+                    {{#todos.isEmpty}}
+                        <p class="text-muted mb-0">Belum ada todo. Tambah satu di sebelah kiri 👈</p>
+                    {{/todos.isEmpty}}
+
+                    {{^todos.isEmpty}}
+                        <div class="table-responsive">
+                            <table class="table align-middle">
+                                <thead>
+                                <tr>
+                                    <th>#</th>
+                                    <th>Judul</th>
+                                    <th>Deskripsi</th>
+                                    <th>Jatuh Tempo</th>
+                                    <th>Status</th>
+                                    <th style="width: 140px;">Aksi</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                {{#todos}}
+                                    <tr>
+                                        <td>{{id}}</td>
+                                        <td>{{title}}</td>
+                                        <td>{{description}}</td>
+                                        <td>
+                                            {{#dueDate}}
+                                                {{dueDate}}
+                                            {{/dueDate}}
+                                            {{^dueDate}}
+                                                <span class="text-muted">-</span>
+                                            {{/dueDate}}
+                                        </td>
+                                        <td>
+                                            {{#completed}}
+                                                <span class="badge bg-success">Selesai</span>
+                                            {{/completed}}
+                                            {{^completed}}
+                                                <span class="badge bg-warning text-dark">Belum</span>
+                                            {{/completed}}
+                                        </td>
+                                        <td>
+                                            <div class="d-flex gap-2">
+                                                <a href="/todos/{{id}}/edit" class="btn btn-sm btn-outline-primary">
+                                                    Edit
+                                                </a>
+
+                                                <form action="/todos/{{id}}/delete" method="post"
+                                                      onsubmit="return confirm('Yakin hapus todo ini?');">
+                                                    <button type="submit" class="btn btn-sm btn-outline-danger">
+                                                        Hapus
+                                                    </button>
+                                                </form>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                {{/todos}}
+                                </tbody>
+                            </table>
+                        </div>
+                    {{/todos.isEmpty}}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI"
+        crossorigin="anonymous"></script>
+</body>
+</html>
